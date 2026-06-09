@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arraiá dos Corrêa-Azevedo</title>
+    
+    <style>
+        /* --- ESTILOS VISUAIS (PEGADA JUNINA) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fdf1e4;
+            color: #4a2c11;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            max-width: 650px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 25px;
+            border: 4px dashed #d85a2b; 
+            margin-bottom: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #b13c16;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-style: italic;
+            color: #d85a2b;
+        }
+
+        /* Navegação por Abas */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eadecc;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #8c633c;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #b13c16;
+            border-bottom: 3px solid #b13c16;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid do Cardápio de Ideias */
+        .cardapio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cardapio-item {
+            background-color: #fff9f2;
+            border: 1px solid #eadecc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f6ab32;
+        }
+
+        .cardapio-item h3 {
+            color: #d85a2b;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .cardapio-item p {
+            font-size: 0.9rem;
+            color: #614022;
+        }
+
+        /* Formulário e Lista */
+        .form-section, .lista-section {
+            background-color: #fefcf9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eadecc;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #8c633c;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #d85a2b;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d85a2b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #b13c16;
+        }
+
+        /* Botão administrativo secundário */
+        .btn-limpar {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+            font-size: 0.9rem;
+            padding: 8px;
+            margin-top: 15px;
+            font-weight: normal;
+        }
+
+        .btn-limpar:hover {
+            background-color: #ebccd1;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            background-color: #fcf4eb;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 5px solid #f6ab32;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nome-pessoa { font-weight: bold; color: #8c633c; }
+        .nome-prato { color: #d85a2b; font-weight: bold; }
+
+        /* Rodapé Dev */
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8c633c;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 500px) {
+            .cardapio-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🔥 Arraiá dos Corrêa-Azevedo 🔥</h1>
+            <p>Escolha seu prato no cardápio e avise a família!</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="mudarAba('menu')">🌽 1. Opções de Comidas</button>
+            <button class="tab-btn" onclick="mudarAba('cadastro')">📝 2. O que vou levar</button>
+        </div>
+
+        <div id="menu" class="tab-content active">
+            <div class="cardapio-grid">
+                <div class="cardapio-item"><h3>🍿 Pipoca</h3><p>Salgada ou doce gourmet com leite ninho.</p></div>
+                <div class="cardapio-item"><h3>🌽 Bolo de Milho</h3><p>O clássico junino fofinho ou cremoso.</p></div>
+                <div class="cardapio-item"><h3>🥜 Paçoca / Pé de Moleque</h3><p>Doces secos e práticos que todo mundo ama.</p></div>
+                <div class="cardapio-item"><h3>🥘 Canjica / Arroz Doce</h3><p>Para aquecer o coração da família.</p></div>
+                <div class="cardapio-item"><h3>🌭 Cachorro-Quente</h3><p>Ou aquele famoso buraco quente caprichado.</p></div>
+                <div class="cardapio-item"><h3>🍷 Quentão / Vinho Quente</h3><p>Bebidas típicas (com ou sem álcool).</p></div>
+            </div>
+            <button onclick="mudarAba('cadastro')">Gostei! Quero escolher meu prato 👉</button>
+        </div>
+
+        <div id="cadastro" class="tab-content">
+            <section class="form-section">
+                <form id="form-comida">
+                    <div class="input-group">
+                        <label for="nome">Seu Nome:</label>
+                        <input type="text" id="nome" placeholder="Ex: Tio João, Prima Gabi" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="prato">O que você vai trazer?</label>
+                        <select id="prato" required>
+                            <option value="">-- Selecione uma opção --</option>
+                            <option value="Pipoca">🍿 Pipoca</option>
+                            <option value="Bolo de Milho / Fubá">🌽 Bolo de Milho / Fubá</option>
+                            <option value="Paçoca / Pé de Moleque">🥜 Paçoca / Pé de Moleque</option>
+                            <option value="Canjica / Arroz Doce">🥘 Canjica / Arroz Doce</option>
+                            <option value="Cachorro-Quente">🌭 Cachorro-Quente</option>
+                            <option value="Quentão / Vinho Quente">🍷 Quentão / Vinho Quente</option>
+                            <option value="Outro (Salgado)">🥮 Outro Salgado (Coloque no WhatsApp)</option>
+                            <option value="Outro (Doce)">🍫 Outro Doce (Coloque no WhatsApp)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Salvar e Enviar no WhatsApp 🚀</button>
+                </form>
+            </section>
+
+            <section class="lista-section">
+                <h2>Pratos já confirmados:</h2>
+                <p id="loading" style="color: #8c633c;">Carregando lista da família...</p>
+                <ul id="lista-pratos"></ul>
+                
+                <button class="btn-limpar" onclick="limparListaComSeguranca()">Limpar Lista Geral ⚠️</button>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        Desenvolvido por Giovanna <span>🤠</span>
+    </footer>
+
+    <script>
+        /* --- LÓGICA DO SITE (JAVASCRIPT) --- */
+        
+        // CONFIGURAÇÕES DO DEV
+        const SENHA_ADMIN = "arraia2026"; // Senha para poder limpar a lista
+        
+        // Se usar o JSONBin, configure aqui. Se deixar vazio, roda via localStorage
+        const JSONBIN_BIN_ID = "";  
+        const JSONBIN_API_KEY = ""; 
+
+        let cardapioGlobal = [];
+
+        // Controle de Abas
+        function mudarAba(abaId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(abaId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Carregar dados
+        async function carregarDados() {
+            const loadingEl = document.getElementById('loading');
+            
+            if (!JSONBIN_BIN_ID || !JSONBIN_API_KEY) {
+                const localData = localStorage.getItem('cardapioJunino');
+                cardapioGlobal = localData ? JSON.parse(localData) : [];
+                loadingEl.style.display = 'none';
+                renderizarLista();
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": JSONBIN_API_KEY }
+                });
+                const data = await response.json();
+                cardapioGlobal = data.record.lista || [];
+            } catch (error) {
+                console.error("Erro ao buscar dados remotos:", error);
+            } finally {
+                loadingEl.style.display = 'none';
+                renderizarLista();
+            }
+        }
+
+        // Salvar dados globais ou locais
+        async function salvarNaNuvemOuLocal() {
+            if (!JSONBIN_BIN_ID || !JSONBIN_API_KEY) {
+                localStorage.setItem('cardapioJunino', JSON.stringify(cardapioGlobal));
+                return;
+            }
+
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify({ lista: cardapioGlobal })
+                });
+            } catch (error) {
+                console.error("Erro ao sincronizar com o servidor:", error);
+            }
+        }
+
+        async function salvarDados(novoItem) {
+            cardapioGlobal.push(novoItem);
+            renderizarLista();
+            await salvarNaNuvemOuLocal();
+            gerarLinkWhatsapp(novoItem);
+        }
+
+        // Função de Limpar com Validação de Senha
+        async function limparListaComSeguranca() {
+            const tentativa = prompt("Digite a senha de administrador para limpar a lista:");
+            
+            if (tentativa === null) return; // Cancelou o prompt
+            
+            if (tentativa === SENHA_ADMIN) {
+                if (confirm("Tem certeza que deseja apagar TODOS os pratos confirmados?")) {
+                    cardapioGlobal = [];
+                    renderizarLista();
+                    await salvarNaNuvemOuLocal();
+                    alert("A lista foi limpa com sucesso!");
+                }
+            } else {
+                alert("Senha incorreta, sô! Acesso negado.");
+            }
+        }
+
+        function renderizarLista() {
+            const listaPratos = document.getElementById('lista-pratos');
+            listaPratos.innerHTML = '';
+            
+            cardapioGlobal.forEach((item) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="nome-pessoa">🤠 ${item.nome}</span> <span class="nome-prato">${item.prato}</span>`;
+                listaPratos.appendChild(li);
+            });
+        }
+
+        function gerarLinkWhatsapp(ultimoItem) {
+            let mensagem = `*🔥 NOVO PRATO CONFIRMADO NO ARRAIÁ! 🔥*\n\n`;
+            mensagem += `🤠 *${ultimoItem.nome}* acabou de confirmar: *${ultimoItem.prato}*\n\n`;
+            mensagem += `--- _Cardápio Atualizado da Família_ ---\n`;
+            
+            cardapioGlobal.forEach(item => {
+                mensagem += `• ${item.nome}: ${item.prato}\n`;
+            });
+
+            mensagem += `\n🎯 Acesse o link do convite para ver ou escolher o seu!`;
+            
+            const urlEncoded = encodeURIComponent(mensagem);
+            window.open(`https://api.whatsapp.com/send?text=${urlEncoded}`, '_blank');
+        }
+
+        // Submit do Form
+        document.getElementById('form-comida').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value.trim();
+            const prato = document.getElementById('prato').value;
+
+            if(!nome || !prato) return;
+
+            salvarDados({ nome, prato });
+            
+            document.getElementById('nome').value = '';
+            document.getElementById('prato').value = '';
+        });
+
+        // Inicialização
+        carregarDados();
+    </script>
+</body>
+</html>
